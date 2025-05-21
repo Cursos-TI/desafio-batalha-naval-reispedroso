@@ -1,6 +1,8 @@
 #include <stdio.h>
 #define TAMANHO 10
+#define HAB_TAM 5  // Tamanho das matrizes de habilidade
 
+// Função para imprimir o tabuleiro principal
 void imprimirTabuleiro(int tabuleiro[TAMANHO][TAMANHO]) {
     printf("\n  ");
     for (int x = 0; x < TAMANHO; x++) {
@@ -17,39 +19,108 @@ void imprimirTabuleiro(int tabuleiro[TAMANHO][TAMANHO]) {
     }
 }
 
+// Função para imprimir uma matriz de habilidade
+void imprimirHabilidade(int matriz[HAB_TAM][HAB_TAM]) {
+    for (int i = 0; i < HAB_TAM; i++) {
+        for (int j = 0; j < HAB_TAM; j++) {
+            printf("%d ", matriz[i][j]);
+        }
+        printf("\n");
+    }
+}
+
+// Função para criar padrão de cone
+void criarCone(int matriz[HAB_TAM][HAB_TAM]) {
+    for (int i = 0; i < HAB_TAM; i++) {
+        for (int j = 0; j < HAB_TAM; j++) {
+            if (j >= (HAB_TAM/2 - i/2) && j <= (HAB_TAM/2 + i/2) && i <= HAB_TAM/2 + 1) {
+                matriz[i][j] = 1;
+            } else {
+                matriz[i][j] = 0;
+            }
+        }
+    }
+}
+
+// Função para criar padrão de cruz
+void criarCruz(int matriz[HAB_TAM][HAB_TAM]) {
+    for (int i = 0; i < HAB_TAM; i++) {
+        for (int j = 0; j < HAB_TAM; j++) {
+            if (i == HAB_TAM/2 || j == HAB_TAM/2) {
+                matriz[i][j] = 1;
+            } else {
+                matriz[i][j] = 0;
+            }
+        }
+    }
+}
+
+// Função para criar padrão de octaedro
+void criarOctaedro(int matriz[HAB_TAM][HAB_TAM]) {
+    for (int i = 0; i < HAB_TAM; i++) {
+        for (int j = 0; j < HAB_TAM; j++) {
+            if ((i == HAB_TAM/2) || (j == HAB_TAM/2 && (i == HAB_TAM/2 - 1 || i == HAB_TAM/2 + 1))) {
+                matriz[i][j] = 1;
+            } else {
+                matriz[i][j] = 0;
+            }
+        }
+    }
+}
+
 int main() {
-    int tabuleiro[TAMANHO][TAMANHO] = {0}; // Inicializa com 0 (água)
+    int tabuleiro[TAMANHO][TAMANHO] = {0}; // Tabuleiro principal
     
-    // Navio horizontal (4 posições)
-    for (int i = 0; i < 4; i++) {
-        tabuleiro[2][3 + i] = 3; // Linha 2, colunas 3-6
+    // Posicionando alguns navios (como no nível aventureiro)
+    for (int i = 0; i < 4; i++) tabuleiro[2][3 + i] = 3; // Navio horizontal
+    for (int i = 0; i < 3; i++) tabuleiro[5 + i][7] = 3; // Navio vertical
+    
+    printf("=== BATALHA NAVAL - NÍVEL MESTRE ===\n");
+    printf("=== HABILIDADES ESPECIAIS ===\n\n");
+    
+    // Criando e mostrando padrões de habilidades
+    int cone[HAB_TAM][HAB_TAM] = {0};
+    int cruz[HAB_TAM][HAB_TAM] = {0};
+    int octaedro[HAB_TAM][HAB_TAM] = {0};
+    
+    criarCone(cone);
+    criarCruz(cruz);
+    criarOctaedro(octaedro);
+    
+    printf("Padrão Cone:\n");
+    imprimirHabilidade(cone);
+    
+    printf("\nPadrão Cruz:\n");
+    imprimirHabilidade(cruz);
+    
+    printf("\nPadrão Octaedro:\n");
+    imprimirHabilidade(octaedro);
+    
+    // Aplicando habilidades ao tabuleiro
+    printf("\n=== APLICANDO HABILIDADES AO TABULEIRO ===\n");
+    
+    // Aplicando cone na posição (1,1)
+    printf("\nAplicando Cone em (1,1):\n");
+    for (int i = 0; i < HAB_TAM; i++) {
+        for (int j = 0; j < HAB_TAM; j++) {
+            if (cone[i][j] == 1 && (1+i) < TAMANHO && (1+j) < TAMANHO) {
+                tabuleiro[1+i][1+j] = 1;
+            }
+        }
     }
     
-    // Navio vertical (3 posições)
-    for (int i = 0; i < 3; i++) {
-        tabuleiro[5 + i][7] = 3; // Coluna 7, linhas 5-7
+    // Aplicando cruz na posição (5,5)
+    printf("\nAplicando Cruz em (5,5):\n");
+    for (int i = 0; i < HAB_TAM; i++) {
+        for (int j = 0; j < HAB_TAM; j++) {
+            if (cruz[i][j] == 1 && (5+i-HAB_TAM/2) >= 0 && (5+j-HAB_TAM/2) >= 0 && 
+                (5+i-HAB_TAM/2) < TAMANHO && (5+j-HAB_TAM/2) < TAMANHO) {
+                tabuleiro[5+i-HAB_TAM/2][5+j-HAB_TAM/2] = 1;
+            }
+        }
     }
     
-    // Navio diagonal direita (3 posições)
-    for (int i = 0; i < 3; i++) {
-        tabuleiro[1 + i][1 + i] = 3; // Diagonal principal
-    }
-    
-    // Navio diagonal esquerda (2 posições)
-    for (int i = 0; i < 2; i++) {
-        tabuleiro[6 + i][8 - i] = 3; // Diagonal secundária
-    }
-    
-    printf("=== BATALHA NAVAL - NÍVEL AVENTUREIRO ===\n");
-    printf("Tabuleiro 10x10 com 4 navios:\n");
-    printf("3 = Navio, 0 = Água\n");
-    
-    printf("\nNavios posicionados:");
-    printf("\n- Horizontal: Linha 2, Colunas 3-6");
-    printf("\n- Vertical: Coluna 7, Linhas 5-7");
-    printf("\n- Diagonal direita: (1,1) a (3,3)");
-    printf("\n- Diagonal esquerda: (6,8) a (7,7)");
-    
+    printf("\nTabuleiro Final (0=Água, 1=Habilidade, 3=Navio):\n");
     imprimirTabuleiro(tabuleiro);
     
     return 0;
