@@ -1,21 +1,17 @@
 #include <stdio.h>
-#define TAMANHO 8
+#define TAMANHO 10
 
 void imprimirTabuleiro(int tabuleiro[TAMANHO][TAMANHO]) {
     printf("\n  ");
     for (int x = 0; x < TAMANHO; x++) {
-        printf("%d ", x);
+        printf("%2d ", x);
     }
     printf("\n");
     
     for (int y = 0; y < TAMANHO; y++) {
-        printf("%d ", y);
+        printf("%2d ", y);
         for (int x = 0; x < TAMANHO; x++) {
-            if (tabuleiro[y][x] == 1) {
-                printf("N "); // Navio
-            } else {
-                printf(". "); // Água
-            }
+            printf("%2d ", tabuleiro[y][x]);
         }
         printf("\n");
     }
@@ -24,25 +20,36 @@ void imprimirTabuleiro(int tabuleiro[TAMANHO][TAMANHO]) {
 int main() {
     int tabuleiro[TAMANHO][TAMANHO] = {0}; // Inicializa com 0 (água)
     
-    // Navio horizontal (3 posições)
-    int navio_horizontal_x = 2, navio_horizontal_y = 3;
+    // Navio horizontal (4 posições)
+    for (int i = 0; i < 4; i++) {
+        tabuleiro[2][3 + i] = 3; // Linha 2, colunas 3-6
+    }
+    
+    // Navio vertical (3 posições)
     for (int i = 0; i < 3; i++) {
-        tabuleiro[navio_horizontal_y][navio_horizontal_x + i] = 1;
+        tabuleiro[5 + i][7] = 3; // Coluna 7, linhas 5-7
     }
     
-    // Navio vertical (2 posições)
-    int navio_vertical_x = 5, navio_vertical_y = 1;
+    // Navio diagonal direita (3 posições)
+    for (int i = 0; i < 3; i++) {
+        tabuleiro[1 + i][1 + i] = 3; // Diagonal principal
+    }
+    
+    // Navio diagonal esquerda (2 posições)
     for (int i = 0; i < 2; i++) {
-        tabuleiro[navio_vertical_y + i][navio_vertical_x] = 1;
+        tabuleiro[6 + i][8 - i] = 3; // Diagonal secundária
     }
     
-    printf("=== BATALHA NAVAL - NÍVEL NOVATO ===\n");
-    printf("Navio horizontal: linha %d, colunas %d a %d\n", 
-           navio_horizontal_y, navio_horizontal_x, navio_horizontal_x + 2);
-    printf("Navio vertical: coluna %d, linhas %d a %d\n", 
-           navio_vertical_x, navio_vertical_y, navio_vertical_y + 1);
+    printf("=== BATALHA NAVAL - NÍVEL AVENTUREIRO ===\n");
+    printf("Tabuleiro 10x10 com 4 navios:\n");
+    printf("3 = Navio, 0 = Água\n");
     
-    printf("\nRepresentação do tabuleiro:\n");
+    printf("\nNavios posicionados:");
+    printf("\n- Horizontal: Linha 2, Colunas 3-6");
+    printf("\n- Vertical: Coluna 7, Linhas 5-7");
+    printf("\n- Diagonal direita: (1,1) a (3,3)");
+    printf("\n- Diagonal esquerda: (6,8) a (7,7)");
+    
     imprimirTabuleiro(tabuleiro);
     
     return 0;
